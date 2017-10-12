@@ -201,13 +201,13 @@
     </Compile>
     <Compile Include="DataContexts\IdentityMigrations\Configuration.cs" />
     <Compile Include="DataContexts\InvoicesDb.cs" />
-    <Compile Include="DataContexts\InvoicesMigrations\201709252108394_InitialCreate.cs" />
-    <Compile Include="DataContexts\InvoicesMigrations\201709252108394_InitialCreate.Designer.cs">
-      <DependentUpon>201709252108394_InitialCreate.cs</DependentUpon>
+    <Compile Include="DataContexts\InvoicesMigrations\201710021742243_InitialCreate.cs" />
+    <Compile Include="DataContexts\InvoicesMigrations\201710021742243_InitialCreate.Designer.cs">
+      <DependentUpon>201710021742243_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataContexts\InvoicesMigrations\201709270938335_AddClientTable.cs" />
-    <Compile Include="DataContexts\InvoicesMigrations\201709270938335_AddClientTable.Designer.cs">
-      <DependentUpon>201709270938335_AddClientTable.cs</DependentUpon>
+    <Compile Include="DataContexts\InvoicesMigrations\201710102113401_RemoveAmmount.cs" />
+    <Compile Include="DataContexts\InvoicesMigrations\201710102113401_RemoveAmmount.Designer.cs">
+      <DependentUpon>201710102113401_RemoveAmmount.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\InvoicesMigrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
@@ -313,11 +313,11 @@
     <EmbeddedResource Include="DataContexts\IdentityMigrations\201709252125242_InitialCreate.resx">
       <DependentUpon>201709252125242_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\InvoicesMigrations\201709252108394_InitialCreate.resx">
-      <DependentUpon>201709252108394_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="DataContexts\InvoicesMigrations\201710021742243_InitialCreate.resx">
+      <DependentUpon>201710021742243_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\InvoicesMigrations\201709270938335_AddClientTable.resx">
-      <DependentUpon>201709270938335_AddClientTable.cs</DependentUpon>
+    <EmbeddedResource Include="DataContexts\InvoicesMigrations\201710102113401_RemoveAmmount.resx">
+      <DependentUpon>201710102113401_RemoveAmmount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

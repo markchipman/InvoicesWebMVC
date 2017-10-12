@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Invoices.Entities
 {
@@ -11,11 +12,13 @@ namespace Invoices.Entities
     public string Name { get; set; }
 
     [Required]
-    public decimal Ammount { get; set; }
-
     public Currency Currency { get; set; }
 
+    public int ClientId { get; set; }
+
     //Navigation property
-    public ClientInvoice ClientInvoice { get; set; }
+    public Client Client { get; set; }
+
+    public List<InvoiceProduct> InvoiceProducts { get; set; }
   }
 }

@@ -7,13 +7,13 @@ namespace WebInvoicesMVC.DataContexts.InvoicesMigrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddClientTable : IMigrationMetadata
+    public sealed partial class RemoveAmmount : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddClientTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RemoveAmmount));
         
         string IMigrationMetadata.Id
         {
-            get { return "201709270938335_AddClientTable"; }
+            get { return "201710102113401_RemoveAmmount"; }
         }
         
         string IMigrationMetadata.Source

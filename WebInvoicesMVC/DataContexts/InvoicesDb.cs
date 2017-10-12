@@ -14,6 +14,8 @@ namespace WebInvoicesMVC.DataContexts
 
     public DbSet<Client> Clients { get; set; }
 
-    public DbSet<ClientInvoice> ClientInvoices { get; set; }
+    public DbSet<InvoiceProduct> InvoiceProducts { get; set; }
+
+    public DbSet<Product> Products { get; set; }  
   }
 }

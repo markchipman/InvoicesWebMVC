@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Invoices.Entities
 {
@@ -12,7 +12,6 @@ namespace Invoices.Entities
     [StringLength(255)]
     public string Name { get; set; }
 
-    //Navigation property
-    public ClientInvoice ClientInvoice { get; set; }
+    public List<Invoice> Invoice { get; set; }
   }
 }

@@ -13,7 +13,7 @@ namespace WebInvoicesMVC.DataContexts.InvoicesMigrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201709252108394_InitialCreate"; }
+            get { return "201710021742243_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

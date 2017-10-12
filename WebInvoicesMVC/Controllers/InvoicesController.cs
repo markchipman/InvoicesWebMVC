@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Invoices.Entities;
 using WebInvoicesMVC.DataContexts;
 
 namespace WebInvoicesMVC.Controllers
-{
-  [Authorize]
+{  
   public class InvoicesController : Controller
   {
     private InvoicesDb db = new InvoicesDb();
