@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Invoices.Entities
@@ -8,7 +9,7 @@ namespace Invoices.Entities
     public int Id { get; set; }
 
     [Required]
-    [StringLength(255)]
+    [StringLength(255)]    
     public string Name { get; set; }
 
     [Required]

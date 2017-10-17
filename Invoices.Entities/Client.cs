@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Invoices.Entities
@@ -10,6 +11,7 @@ namespace Invoices.Entities
 
     [Required]
     [StringLength(255)]
+    [DisplayName("Client Name")]
     public string Name { get; set; }
 
     public List<Invoice> Invoice { get; set; }

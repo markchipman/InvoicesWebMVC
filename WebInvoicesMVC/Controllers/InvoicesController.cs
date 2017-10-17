@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -6,15 +7,18 @@ using Invoices.Entities;
 using WebInvoicesMVC.DataContexts;
 
 namespace WebInvoicesMVC.Controllers
-{  
+{
   public class InvoicesController : Controller
   {
     private InvoicesDb db = new InvoicesDb();
 
     // GET: Invoices
-    public ActionResult Index()
+    public ActionResult Index(string sortOrder)
     {
-      return View(db.Invoices.ToList());
+      ViewBag.NameSortParameter = String.IsNullOrEmpty(sortOrder) ? "invoiceNumber_desc" : string.Empty;
+
+      var invoices = db.Invoices.Include(i => i.Client);
+      return View(invoices.ToList());
     }
 
     // GET: Invoices/Details/5
@@ -35,6 +39,7 @@ namespace WebInvoicesMVC.Controllers
     // GET: Invoices/Create
     public ActionResult Create()
     {
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name");
       return View();
     }
 
@@ -43,7 +48,7 @@ namespace WebInvoicesMVC.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "Id,Name,Ammount,Currency")] Invoice invoice)
+    public ActionResult Create([Bind(Include = "Id,Name,Currency,ClientId")] Invoice invoice)
     {
       if (ModelState.IsValid)
       {
@@ -52,6 +57,7 @@ namespace WebInvoicesMVC.Controllers
         return RedirectToAction("Index");
       }
 
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoice.ClientId);
       return View(invoice);
     }
 
@@ -67,6 +73,7 @@ namespace WebInvoicesMVC.Controllers
       {
         return HttpNotFound();
       }
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoice.ClientId);
       return View(invoice);
     }
 
@@ -75,7 +82,7 @@ namespace WebInvoicesMVC.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Name,Ammount,Currency")] Invoice invoice)
+    public ActionResult Edit([Bind(Include = "Id,Name,Currency,ClientId")] Invoice invoice)
     {
       if (ModelState.IsValid)
       {
@@ -83,6 +90,7 @@ namespace WebInvoicesMVC.Controllers
         db.SaveChanges();
         return RedirectToAction("Index");
       }
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoice.ClientId);
       return View(invoice);
     }
 
