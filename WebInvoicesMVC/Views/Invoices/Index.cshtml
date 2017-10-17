@@ -6,9 +6,11 @@
 
 <h2>Invoices list</h2>
 
-@Html.BeginForm()
-{ 
-
+@using (Html.BeginForm())
+{
+  <p>
+    Find by name: @Html.TextBox("SearchString")  
+    <input type="submit" value="Search" /></p>
 }
 
 <p>
