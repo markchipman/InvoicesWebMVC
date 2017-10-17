@@ -21,20 +21,20 @@ namespace WebInvoicesMVC.Controllers
       return View(invoices.ToList());
     }
 
-    // GET: Invoices/Details/5
-    public ActionResult Details(int? id)
-    {
-      if (id == null)
-      {
-        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-      }
-      Invoice invoice = db.Invoices.Find(id);
-      if (invoice == null)
-      {
-        return HttpNotFound();
-      }
-      return View(invoice);
-    }
+        // GET: Invoices/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Invoice invoice = db.Invoices.Find(id);
+            if (invoice == null)
+            {
+                return HttpNotFound();
+            }
+            return View(invoice);
+        }
 
     // GET: Invoices/Create
     public ActionResult Create()
@@ -94,39 +94,39 @@ namespace WebInvoicesMVC.Controllers
       return View(invoice);
     }
 
-    // GET: Invoices/Delete/5
-    public ActionResult Delete(int? id)
-    {
-      if (id == null)
-      {
-        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-      }
-      Invoice invoice = db.Invoices.Find(id);
-      if (invoice == null)
-      {
-        return HttpNotFound();
-      }
-      return View(invoice);
-    }
+        // GET: Invoices/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Invoice invoice = db.Invoices.Find(id);
+            if (invoice == null)
+            {
+                return HttpNotFound();
+            }
+            return View(invoice);
+        }
 
-    // POST: Invoices/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public ActionResult DeleteConfirmed(int id)
-    {
-      Invoice invoice = db.Invoices.Find(id);
-      db.Invoices.Remove(invoice);
-      db.SaveChanges();
-      return RedirectToAction("Index");
-    }
+        // POST: Invoices/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Invoice invoice = db.Invoices.Find(id);
+            db.Invoices.Remove(invoice);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
-  }
 }
