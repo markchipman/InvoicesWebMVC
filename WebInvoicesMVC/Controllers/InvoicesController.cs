@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -24,7 +27,7 @@ namespace WebInvoicesMVC.Controllers
         invoices = db.Invoices
           .Where(inv => inv.Name.Contains(searchString))
           .Include(i => i.Client);
-      }      
+      }
 
       return View(invoices.ToList());
     }
@@ -73,32 +76,93 @@ namespace WebInvoicesMVC.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "Id,Name,Currency,ClientId,ProductName,Price,Quantity, Products")] InvoiceCreateViewModel invoiceViewModel)
+    public ActionResult Create(string submitButton, [Bind(Include = "Id,Name,Currency,ClientId,ProductName,Price,Quantity, Products")] InvoiceCreateViewModel invoiceViewModel)
     {
-      if (ModelState.IsValid)
+      if (submitButton == "Create")
       {
-        db.InvoiceProducts.Add(new InvoiceProduct
+        if (ModelState.IsValid)
         {
-          InvoiceId = invoiceViewModel.InvoiceId,
-          ProductId = db.Products.Single(p => p.ProductName.Equals(invoiceViewModel.ProductName)).Id,
-          Quantity = invoiceViewModel.Quantity,
-        });
-
-        db.Invoices.Add(new Invoice
-        {
-          ClientId = invoiceViewModel.ClientId,
-          Currency = invoiceViewModel.Currency,
-          Name = invoiceViewModel.Name
-        });
-
-        db.SaveChanges();
-
-
-        return RedirectToAction("Index");
+          AddInvoiceProduct(invoiceViewModel);
+          return RedirectToAction("Index");
+        }
       }
+      else if (submitButton == "AddProduct")
+      {
+        //Find if invoice is added to db. If not then add:
+        Invoice invoice = db.Invoices.SingleOrDefault(i => i.Name.Equals(invoiceViewModel.Name));
+        if (invoice == null)
+        {
+          invoice = AddInvoiceProduct(invoiceViewModel);         
+        }
+        else
+        {
+          UpdateInvoiceProduct(invoiceViewModel, invoice);              
+        }
 
+        invoiceViewModel.Price = 0;
+        invoiceViewModel.ProductName = String.Empty;
+        invoiceViewModel.Quantity = 0;
+
+        Invoice inv = db.Invoices
+          .Single(i => i.Id == invoice.Id);
+
+        IEnumerable<InvoiceProduct> invProd = db.InvoiceProducts
+          .Where(ip => ip.InvoiceId.Equals(invoice.Id));
+
+        //IEnumerable<Product> prod = from p in db.Products
+        //  where invProd.Contains(p.Id)
+        //  select p;
+
+
+        IEnumerable<Product> query1 = invoice.InvoiceProducts
+          .Select(ip => ip.Product);          
+
+        invoiceViewModel.Products = query1.ToList();
+
+      }
+      
       ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
       return View(invoiceViewModel);
+    }
+
+    private void UpdateInvoiceProduct(InvoiceCreateViewModel invoiceViewModel, Invoice invoice)
+    {
+      db.InvoiceProducts.Add(new InvoiceProduct
+      {
+        InvoiceId = invoice.Id,
+        ProductId = db.Products.Single(p => p.ProductName.Equals(invoiceViewModel.ProductName)).Id,
+        Quantity = invoiceViewModel.Quantity,
+      });
+
+      invoice.Name = invoiceViewModel.Name;
+      invoice.ClientId = invoiceViewModel.ClientId;
+      invoice.Currency = invoiceViewModel.Currency;      
+
+      db.Entry(invoice).State = EntityState.Modified;
+
+      db.SaveChanges();
+    }
+
+    private Invoice AddInvoiceProduct(InvoiceCreateViewModel invoiceViewModel)
+    {
+      db.InvoiceProducts.Add(new InvoiceProduct
+      {
+        InvoiceId = invoiceViewModel.InvoiceId,
+        ProductId = db.Products.Single(p => p.ProductName.Equals(invoiceViewModel.ProductName)).Id,
+        Quantity = invoiceViewModel.Quantity,
+      });
+
+      Invoice invoice = new Invoice
+      {
+        ClientId = invoiceViewModel.ClientId,
+        Currency = invoiceViewModel.Currency,
+        Name = invoiceViewModel.Name
+      };
+
+      db.Invoices.Add(invoice);
+      db.SaveChanges();
+
+      return invoice;
     }
 
     // GET: Invoices/Edit/5

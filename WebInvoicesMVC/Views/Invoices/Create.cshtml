@@ -26,12 +26,14 @@
     </div>
 
     <div class="form-group">
-      @Html.LabelFor(model => model.ClientId, htmlAttributes: new { @class = "control-label col-md-2" })
+      @Html.LabelFor(model => model.ClientId, htmlAttributes: new {@class = "control-label col-md-2"})
       <div class="col-md-10">
-        @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+        @Html.EditorFor(model => model.ClientId, new {htmlAttributes = new {@class = "form-control"}})
+        @Html.ValidationMessageFor(model => model.ClientId, "", new {@class = "text-danger"})
       </div>
     </div>
+
+    <hr/>
 
     <div class="form-group">
       @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -50,16 +52,24 @@
     </div>
 
     <div class="form-group">
-      @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+      @Html.LabelFor(model => model.Quantity, htmlAttributes: new {@class = "control-label col-md-2"})
       <div class="col-md-10">
-        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+        @Html.EditorFor(model => model.Quantity, new {htmlAttributes = new {@class = "form-control"}})
+        @Html.ValidationMessageFor(model => model.Quantity, "", new {@class = "text-danger"})
       </div>
     </div>
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Create" class="btn btn-default" />
+        <input type="submit" name="submitButton" value="AddProduct" class="btn btn-default"/>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <input type="submit" name="submitButton" value="Create" class="btn btn-default" />
       </div>
     </div>
   </div>
@@ -67,11 +77,11 @@
 
 <div id="Products">
   @if (Model != null)
-  {
-    if (Model.Products != null)
-    {
-      foreach (var product in Model.Products)
       {
+        if (Model.Products != null)
+        {
+          foreach (var product in Model.Products)
+          {
         <div class="form-group">
           @Html.LabelFor(model => product.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
           <div class="col-md-10">
