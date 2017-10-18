@@ -51,6 +51,7 @@ namespace WebInvoicesMVC.Controllers
     public ActionResult Create(int? id)
     {
       ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name");
+      ViewBag.Products = new SelectList(db.Products, "Id", "ProductName");
       if (id != null)
       {
         Invoice invoice = db.Invoices.Single(i => i.Id.Equals(id.Value));
@@ -100,14 +101,14 @@ namespace WebInvoicesMVC.Controllers
         }
 
         invoiceViewModel.Price = 0;
-        invoiceViewModel.ProductName = String.Empty;
+        invoiceViewModel.ProductId = 0;
         invoiceViewModel.Quantity = 0;
 
-        Invoice inv = db.Invoices
-          .Single(i => i.Id == invoice.Id);
+        //Invoice inv = db.Invoices
+        //  .Single(i => i.Id == invoice.Id);
 
-        IEnumerable<InvoiceProduct> invProd = db.InvoiceProducts
-          .Where(ip => ip.InvoiceId.Equals(invoice.Id));
+        //IEnumerable<InvoiceProduct> invProd = db.InvoiceProducts
+        //  .Where(ip => ip.InvoiceId.Equals(invoice.Id));
 
         //IEnumerable<Product> prod = from p in db.Products
         //  where invProd.Contains(p.Id)
@@ -121,7 +122,8 @@ namespace WebInvoicesMVC.Controllers
 
       }
       
-      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
+      ViewBag.Clients = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
+      ViewBag.Products = new SelectList(db.Products, "Id", "ProductName", invoiceViewModel.ProductId);
       return View(invoiceViewModel);
     }
 
@@ -130,7 +132,7 @@ namespace WebInvoicesMVC.Controllers
       db.InvoiceProducts.Add(new InvoiceProduct
       {
         InvoiceId = invoice.Id,
-        ProductId = db.Products.Single(p => p.ProductName.Equals(invoiceViewModel.ProductName)).Id,
+        ProductId = invoiceViewModel.ProductId,
         Quantity = invoiceViewModel.Quantity,
       });
 
@@ -148,7 +150,7 @@ namespace WebInvoicesMVC.Controllers
       db.InvoiceProducts.Add(new InvoiceProduct
       {
         InvoiceId = invoiceViewModel.InvoiceId,
-        ProductId = db.Products.Single(p => p.ProductName.Equals(invoiceViewModel.ProductName)).Id,
+        ProductId = invoiceViewModel.ProductId,
         Quantity = invoiceViewModel.Quantity,
       });
 
