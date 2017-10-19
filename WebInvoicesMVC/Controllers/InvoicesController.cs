@@ -51,15 +51,13 @@ namespace WebInvoicesMVC.Controllers
       if (id != null)
       {
         Invoice invoice = db.Invoices.Single(i => i.Id.Equals(id.Value));
-        List<Product> products = invoice.InvoiceProducts.Select(ip => ip.Product).ToList();
 
         InvoiceCreateViewModel invoiceCreateViewModel = new InvoiceCreateViewModel
         {
           ClientId = invoice.ClientId,
           Currency = invoice.Currency,
           InvoiceId = invoice.Id,
-          Name = invoice.Name,
-          Products = products
+          Name = invoice.Name
         };
 
         return View(invoiceCreateViewModel);
@@ -83,7 +81,7 @@ namespace WebInvoicesMVC.Controllers
           return RedirectToAction("Index");
         }
       }
-           
+
       ViewBag.Clients = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
       ViewBag.Products = new SelectList(db.Products, "Id", "ProductName", invoiceViewModel.ProductId);
       return View(invoiceViewModel);
@@ -102,7 +100,7 @@ namespace WebInvoicesMVC.Controllers
 
       invoice.Name = invoiceViewModel.Name;
       invoice.ClientId = invoiceViewModel.ClientId;
-      invoice.Currency = invoiceViewModel.Currency;      
+      invoice.Currency = invoiceViewModel.Currency;
 
       db.Entry(invoice).State = EntityState.Modified;
 
@@ -128,22 +126,51 @@ namespace WebInvoicesMVC.Controllers
         Invoice = invoice,
         Product = db.Products.SingleOrDefault(p => p.Id.Equals(invoiceViewModel.ProductId))
       });
-            
+
       db.SaveChanges();
       return invoice;
     }
 
     public ActionResult LoadProducts(int invoiceId)
     {
-      List<Product> products = null;
+      List<InvoiceProductViewModel> products = null;
       if (invoiceId != 0)
       {
-        products = db.InvoiceProducts
-          .Where(ip => ip.InvoiceId == invoiceId)
-          .Select(ip => ip.Product).ToList();
+        products = GetInvoiceProducts(invoiceId);
       }
-      
+
       return PartialView("_ProductsPartial", products);
+    }
+
+    private List<InvoiceProductViewModel> GetInvoiceProducts(int invoiceId)
+    {
+
+      return (
+        from p in db.Products
+        from ip in p.InvoiceProducts
+        where ip.InvoiceId.Equals(invoiceId)
+        select new InvoiceProductViewModel
+        {
+          Price = p.Price,
+          ProductName = p.ProductName,
+          Quantity = ip.Quantity,
+          TotalAmmount = ip.Quantity * p.Price
+        }).ToList();
+
+
+      //return db.InvoiceProducts
+      //  .Include(ip => ip.Product)
+      //  .Where(ip => ip.InvoiceId == invoiceId)
+      //  .SelectMany(
+      //    ip => ip.Products,
+      //    (ip, p) => new InvoiceProductViewModel
+      //    {
+      //      Price = p.Price,
+      //      ProductName = p.ProductName,
+      //      Quantity = ip.Quantity,
+      //      TotalAmmount = ip.Quantity * p.Price
+      //    })
+      //  .ToList();
     }
 
     [HttpPost]
@@ -163,9 +190,7 @@ namespace WebInvoicesMVC.Controllers
         UpdateInvoiceProduct(invoiceCreateViewModel, invoice);
       }
 
-      List<Product> products = invoice.InvoiceProducts
-        .Select(ip => ip.Product).ToList();
-
+      var products = GetInvoiceProducts(invoice.Id);
       return PartialView("_ProductsPartial", products);
     }
 

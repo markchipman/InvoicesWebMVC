@@ -1,17 +1,22 @@
-﻿@model List<Invoices.Entities.Product>
+﻿@model List<WebInvoicesMVC.Models.InvoiceProductViewModel>
 
 @if (Model != null)
 {
 
   <table class="table">
-    <tr>
+    <tr>      
       <th>
         @Html.DisplayNameFor(model => model[0].ProductName)
       </th>
       <th>
         @Html.DisplayNameFor(model => model[0].Price)
       </th>
-      <th></th>
+      <th>
+        @Html.DisplayNameFor(model => model[0].Quantity)
+      </th>
+      <th>
+        @Html.DisplayNameFor(model => model[0].TotalAmmount)
+      </th>
     </tr>
 
     @foreach (var product in Model)
@@ -21,8 +26,14 @@
           @Html.DisplayFor(model => product.ProductName, new { htmlAttributes = new { @class = "form-control" } })
         </td>
         <td>
-          @Html.DisplayFor(model => product.Price, new { htmlAttributes = new { @class = "form-control" } })
+          @Html.DisplayFor(model => product.Price, new {htmlAttributes = new {@class = "form-control"}})
         </td>
+        <td>
+          @Html.DisplayFor(model => product.Quantity, new {htmlAttributes = new {@class="form-control"}})
+        </td>
+        <td>
+          @Html.DisplayFor(model => product.TotalAmmount, new {htmlAttributes = new {@class = "form-control"}})
+        </td>        
       </tr>
     }
   </table>
