@@ -3,18 +3,24 @@
 //})();
 
 //JQuery document ready function
-$(function () { 
+$(function () {
   $("#addProductBtn")
     .click(function (e) {
-      var data = $("form").serialize();
+      var quantity = $("form")["0"]["Quantity"].value;
 
-      $.ajax({
-        url: "/Invoices/AddProduct",
-        type: "post",
-        data: data
-      })
-      .done(function(result) {
+      if (quantity === "0") {
+        alert("Quantity can't be equal to 0.");
+      } else {
+        var data = $("form").serialize();
+        $.ajax({
+          url: "/Invoices/AddProduct",
+          type: "post",
+          data: data
+        })
+        .done(function (result) {
           $("#products").html(result);
+          alert("New product added.");
         });
+      }      
     });
 });

@@ -28,21 +28,6 @@ namespace WebInvoicesMVC.Controllers
       return View(invoices.ToList());
     }
 
-    // GET: Invoices/Details/5
-    public ActionResult Details(int? id)
-    {
-      if (id == null)
-      {
-        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-      }
-      Invoice invoice = db.Invoices.Find(id);
-      if (invoice == null)
-      {
-        return HttpNotFound();
-      }
-      return View(invoice);
-    }
-
     // GET: Invoices/Create
     public ActionResult Create(int? id)
     {
@@ -71,15 +56,12 @@ namespace WebInvoicesMVC.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(string submitButton, [Bind(Include = "Id,Name,Currency,ClientId,ProductId,Price,Quantity, Products")] InvoiceCreateViewModel invoiceViewModel)
+    public ActionResult Create([Bind(Include = "Id,Name,Currency,ClientId,ProductId,Price,Quantity")] InvoiceCreateViewModel invoiceViewModel)
     {
-      if (submitButton == "Create")
+      if (ModelState.IsValid)
       {
-        if (ModelState.IsValid)
-        {
-          AddInvoiceProduct(invoiceViewModel);
-          return RedirectToAction("Index");
-        }
+        AddOrUpdateInvoice(invoiceViewModel);
+        return RedirectToAction("Index");
       }
 
       ViewBag.Clients = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
@@ -144,7 +126,6 @@ namespace WebInvoicesMVC.Controllers
 
     private List<InvoiceProductViewModel> GetInvoiceProducts(int invoiceId)
     {
-
       return (
         from p in db.Products
         from ip in p.InvoiceProducts
@@ -176,6 +157,14 @@ namespace WebInvoicesMVC.Controllers
     [HttpPost]
     public PartialViewResult AddProduct(InvoiceCreateViewModel invoiceCreateViewModel)
     {
+      var invoice = AddOrUpdateInvoice(invoiceCreateViewModel);
+
+      var products = GetInvoiceProducts(invoice.Id);
+      return PartialView("_ProductsPartial", products);
+    }
+
+    private Invoice AddOrUpdateInvoice(InvoiceCreateViewModel invoiceCreateViewModel)
+    {
       Invoice invoice = db.Invoices
         .Include(i => i.InvoiceProducts)
         .Include(i => i.InvoiceProducts.Select(ip => ip.Product))
@@ -189,14 +178,15 @@ namespace WebInvoicesMVC.Controllers
       {
         UpdateInvoiceProduct(invoiceCreateViewModel, invoice);
       }
-
-      var products = GetInvoiceProducts(invoice.Id);
-      return PartialView("_ProductsPartial", products);
+      return invoice;
     }
 
     // GET: Invoices/Edit/5
     public ActionResult Edit(int? id)
     {
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name");
+      ViewBag.Products = new SelectList(db.Products, "Id", "ProductName");
+
       if (id == null)
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -206,8 +196,17 @@ namespace WebInvoicesMVC.Controllers
       {
         return HttpNotFound();
       }
-      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoice.ClientId);
-      return View(invoice);
+
+      InvoiceCreateViewModel invoiceCreateViewModel = new InvoiceCreateViewModel
+      {
+        ClientId = invoice.ClientId,
+        Currency = invoice.Currency,
+        InvoiceId = invoice.Id,
+        Name = invoice.Name,
+        ProductId = 0
+      };
+
+      return View(invoiceCreateViewModel);
     }
 
     // POST: Invoices/Edit/5
@@ -215,16 +214,16 @@ namespace WebInvoicesMVC.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Name,Currency,ClientId")] Invoice invoice)
+    public ActionResult Edit([Bind(Include = "Id,Name,Currency,ClientId,ProductId,Price,Quantity")] InvoiceCreateViewModel invoiceViewModel)
     {
       if (ModelState.IsValid)
       {
-        db.Entry(invoice).State = EntityState.Modified;
-        db.SaveChanges();
+        AddOrUpdateInvoice(invoiceViewModel);
         return RedirectToAction("Index");
       }
-      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoice.ClientId);
-      return View(invoice);
+      ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
+      ViewBag.Products = new SelectList(db.Products, "Id", "ProductName", invoiceViewModel.ProductId);
+      return View(invoiceViewModel);
     }
 
     // GET: Invoices/Delete/5
