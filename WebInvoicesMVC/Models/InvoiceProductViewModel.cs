@@ -2,6 +2,8 @@
 {
   public class InvoiceProductViewModel
   {
+    public int InvoiceProductId { get; set; }
+
     public string ProductName { get; set; }
 
     public decimal Price { get; set; }

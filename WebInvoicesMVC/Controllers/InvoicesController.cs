@@ -98,6 +98,21 @@ namespace WebInvoicesMVC.Controllers
       db.SaveChanges();
     }
 
+    [HttpPost]
+    public int? UpdateInvoiceProduct(int invoiceProductId, int quantity)
+    {
+      var invoiceProduct = db.InvoiceProducts.FirstOrDefault(p => p.Id == invoiceProductId);
+      if (invoiceProduct != null)
+      {
+        invoiceProduct.Quantity = quantity;
+        db.Entry(invoiceProduct).State = EntityState.Modified;
+        db.SaveChanges();
+        return quantity;
+      }
+
+      return null;
+    }
+
     private Invoice AddInvoiceProduct(InvoiceCreateViewModel invoiceViewModel)
     {
       Invoice invoice = new Invoice
@@ -141,6 +156,7 @@ namespace WebInvoicesMVC.Controllers
         where ip.InvoiceId.Equals(invoiceId)
         select new InvoiceProductViewModel
         {
+          InvoiceProductId = ip.Id,
           Price = p.Price,
           ProductName = p.ProductName,
           Quantity = ip.Quantity,

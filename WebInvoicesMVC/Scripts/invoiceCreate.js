@@ -5,6 +5,40 @@
 //JQuery document ready function
 $(function () {
 
+  //$("#updateProductBtn")
+  //  .click(function (e) {
+  //    var id = $(this).data("id");
+  //    console.log(id);
+  //  });
+
+  $(".updateProductBtnAjax")
+    .click(function (e) {
+      var invoiceProductId = $(this).data("id");
+      var invoiceProduct = $.grep(jsModel, function (e) { return e.InvoiceProductId === invoiceProductId });
+      if (invoiceProduct) {
+        var quantity = invoiceProduct[0].Quantity;
+        if (quantity) {
+          $.ajax({
+            url: "/Invoices/UpdateInvoiceProduct",
+            type: "post",
+            data: { invoiceProductId: invoiceProductId, quantity: quantity },
+            dataType: "json",
+            cache: false,
+            traditional: true,
+            success: function(result) {
+              console.log(result);
+            }
+        });
+        }
+      }      
+    });
+
+
+  //$(document).click("click", ".updateProductBtnAjax", function (e) {
+  //  var id = $(this).data("id");
+  //  console.log(id);
+  //});
+
   $("#productId").change(function (e) {
     var productId = $("#productId").val();
 
