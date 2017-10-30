@@ -1,7 +1,7 @@
 ﻿@model WebInvoicesMVC.Models.InvoiceCreateViewModel
 
 @{
-  ViewBag.Title = "Edit";   
+  ViewBag.Title = "Edit";
 }
 
 @using (Html.BeginForm())
@@ -10,7 +10,7 @@
 
   <div class="form-horizontal">
     <h4>InvoiceCreateViewModel</h4>
-    <hr/>
+    <hr />
 
     @Html.HiddenFor(model => model.InvoiceId)
 
@@ -44,19 +44,30 @@
     <div class="form-group">
       @Html.LabelFor(model => model.ProductId, htmlAttributes: new { @class = "control-label col-md-2" })
       <div class="col-md-10">
-        @Html.DropDownListFor(model => model.ProductId, (SelectList)ViewBag.Products, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.ProductId, (SelectList)ViewBag.Products, htmlAttributes: new { @id = "productId", @class = "form-control" })
       </div>
     </div>
 
     <div class="form-group">
       @Html.Label("Price", htmlAttributes: new { @class = "control-label col-md-2" })
       <div class="col-md-10">
-        @*@Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })*@
+        @Html.Editor("Price", new
+        {
+          htmlAttributes = new
+          {
+            @id = "price",
+            @class = "form-control",
+            @disbled = "disabled",
+            @readonly = "readonly",
+            @style = "background-color:white;",
+            @Value = ViewBag.FirstProductPrice.ToString()
+          }
+        })
       </div>
     </div>
 
     <div class="form-group">
-      @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @id="quantity", @class = "control-label col-md-2" })
+      @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @id = "quantity", @class = "control-label col-md-2" })
       <div class="col-md-10">
         @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
       </div>

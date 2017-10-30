@@ -195,6 +195,16 @@ namespace WebInvoicesMVC.Controllers
     {
       ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name");
       ViewBag.Products = new SelectList(db.Products, "Id", "ProductName");
+      var firstProduct = db.Products.FirstOrDefault();
+      if (firstProduct != null)
+      {
+        ViewBag.FirstProductPrice = firstProduct.Price;
+      }
+      else
+      {
+        ViewBag.FirstProductPrice = 0;
+      }
+      
 
       if (id == null)
       {
@@ -230,6 +240,7 @@ namespace WebInvoicesMVC.Controllers
         AddOrUpdateInvoice(invoiceViewModel);
         return RedirectToAction("Index");
       }
+      ViewBag.FirstProductPrice = db.Products.FirstOrDefault();
       ViewBag.ClientId = new SelectList(db.Clients, "Id", "Name", invoiceViewModel.ClientId);
       ViewBag.Products = new SelectList(db.Products, "Id", "ProductName", invoiceViewModel.ProductId);
       return View(invoiceViewModel);
